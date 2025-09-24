@@ -1,57 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MOCK_TRANSACTIONS } from '../../constants';
-import type { Transaction } from '../../types';
 import { TransactionStatus } from '../../types';
 import Badge from '../ui/Badge';
-import Button from '../ui/Button';
 
-const statusColorMap: Record<TransactionStatus, 'green' | 'yellow' | 'red'> = {
-  [TransactionStatus.Paid]: 'green',
-  [TransactionStatus.Pending]: 'yellow',
-  [TransactionStatus.Refunded]: 'red',
+const getStatusColor = (status: TransactionStatus): 'green' | 'yellow' | 'red' | 'gray' => {
+  switch (status) {
+    case TransactionStatus.Paid:
+      return 'green';
+    case TransactionStatus.Pending:
+      return 'yellow';
+    case TransactionStatus.Refunded:
+      return 'red';
+    default:
+      return 'gray';
+  }
 };
 
 const Transactions: React.FC = () => {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const filteredTransactions = MOCK_TRANSACTIONS.filter(
+        (transaction) =>
+        transaction.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        transaction.id.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Transações</h1>
-        <Button>Exportar CSV</Button>
-      </div>
-
-      <div className="bg-surface p-6 rounded-lg shadow-md border border-gray-200">
+      <h1 className="text-3xl font-bold mb-6">Transações</h1>
+      <div className="bg-surface rounded-lg shadow-md border border-gray-200">
+        <div className="p-4">
+          <input
+            type="text"
+            placeholder="Buscar por cliente ou ID..."
+            className="w-full p-2 border rounded-md"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b">
-                <th className="p-4">ID</th>
-                <th className="p-4">Cliente</th>
-                <th className="p-4">Data</th>
-                <th className="p-4 text-right">Valor Bruto</th>
-                <th className="p-4 text-right">Taxa</th>
-                <th className="p-4 text-right">Valor Líquido</th>
-                <th className="p-4 text-center">Status</th>
-                <th className="p-4 text-center">Ações</th>
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Bruto</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taxa</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Líquido</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
               </tr>
             </thead>
-            <tbody>
-              {MOCK_TRANSACTIONS.map((tx: Transaction) => (
-                <tr key={tx.id} className="border-b hover:bg-gray-50">
-                  <td className="p-4 font-mono text-sm">{tx.id}</td>
-                  <td className="p-4">{tx.customerName}</td>
-                  <td className="p-4 text-gray-600">{tx.date}</td>
-                  <td className="p-4 text-right font-medium">R$ {tx.grossValue.toFixed(2).replace('.', ',')}</td>
-                  <td className="p-4 text-right text-red-600">R$ {tx.fee.toFixed(2).replace('.', ',')}</td>
-                  <td className="p-4 text-right font-semibold text-green-600">R$ {tx.netValue.toFixed(2).replace('.', ',')}</td>
-                  <td className="p-4 text-center">
-                    <Badge color={statusColorMap[tx.status]}>{tx.status}</Badge>
-                  </td>
-                  <td className="p-4 text-center">
-                    {tx.status === TransactionStatus.Paid && (
-                      <Button variant="secondary" className="py-1 px-3 text-sm" onClick={() => alert(`Estornando transação ${tx.id}`)}>
-                        Estornar
-                      </Button>
-                    )}
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredTransactions.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{transaction.id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.customerName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.date}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R$ {transaction.grossValue.toFixed(2).replace('.', ',')}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R$ {transaction.fee.toFixed(2).replace('.', ',')}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R$ {transaction.netValue.toFixed(2).replace('.', ',')}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <Badge color={getStatusColor(transaction.status)}>{transaction.status}</Badge>
                   </td>
                 </tr>
               ))}

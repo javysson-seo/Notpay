@@ -41,3 +41,11 @@ export interface Webhook {
     event: 'payment.received' | 'payment.refunded' | 'payout.completed';
     isActive: boolean;
 }
+
+export type ToastAppearance = 'success' | 'error' | 'info' | 'warning';
+
+export interface ToastMessage {
+  id: number;
+  message: string;
+  appearance: ToastAppearance;
+}
