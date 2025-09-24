@@ -1,0 +1,5 @@
+{
+  "name": "Notpay",
+  "description": "A client-facing dashboard for the Notpay SAAS application, allowing clients to manage PIX transactions, products, withdrawals, and API settings.",
+  "requestFramePermissions": []
+}

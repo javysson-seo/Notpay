@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notpay - PIX Payment Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'primary': '#0D6EFD',
+              'primary-dark': '#0B5ED7',
+              'secondary': '#6C757D',
+              'success': '#198754',
+              'danger': '#DC3545',
+              'warning': '#FFC107',
+              'info': '#0DCAF0',
+              'light': '#F8F9FA',
+              'dark': '#212529',
+              'background': '#F8F9FA',
+              'surface': '#FFFFFF',
+              'on-surface': '#212529',
+              'on-primary': '#FFFFFF'
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "recharts": "https://aistudiocdn.com/recharts@^3.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/"
+  }
+}
+</script>
+</head>
+  <body class="bg-background">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
